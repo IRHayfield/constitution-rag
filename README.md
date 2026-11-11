@@ -1,6 +1,6 @@
 # Constitution RAG System
 
-A Retrieval-Augmented Generation (RAG) system for analyzing and generating constitutional documents.
+A Retrieval-Augmented Generation (RAG) system for analyzing and generating constitutional documents with Ollama integration.
 
 ## Overview
 
@@ -12,30 +12,31 @@ This project implements a RAG system that can:
 
 - PDF processing of constitutional documents
 - Vector storage and similarity search
-- LLM integration for question answering and generation
+- Local LLM integration using Ollama
 - Modular architecture for extensibility
 
 ## Installation
 
-### Using uv (Recommended)
+### Prerequisites
 
-1. Install uv: https://docs.astral.sh/uv/
-2. Run the setup script:
+1. Install [uv](https://docs.astral.sh/uv/)
+2. Install [Ollama](https://ollama.com/download)
+3. Pull required models:
    ```bash
-   ./setup.sh
+   ollama pull mistral
+   ollama pull llama2
    ```
 
-### Manual Installation
+### Setup
 
-1. Create virtual environment:
-   ```bash
-   uv venv
-   source .venv/bin/activate
-   ```
-2. Install dependencies:
-   ```bash
-   uv pip install -e .
-   ```
+```bash
+# Create virtual environment
+uv venv
+source .venv/bin/activate
+
+# Install dependencies
+uv sync
+```
 
 ## Usage
 
@@ -58,26 +59,27 @@ python demo.py --generate "Create a new constitution using principles from const
 
 ```
 constitution-rag/
-├── constitution-rag/          # Main package
+├── spec.md                 # Specification document
+├── constitutions/          # Input PDF constitution files
+├── output/                 # Processed documents and results
+├── src/
 │   ├── __init__.py
-│   ├── data_loader.py         # PDF extraction and text processing
-│   ├── vector_store.py        # Vector database setup and management
-│   └── rag_pipeline.py        # Main RAG system implementation
-├── constitutions/             # Input PDF constitution files
-├── output/                    # Processed documents and results
-├── demo.py                    # Demo script
-├── setup.sh                   # Setup script for environment
-├── requirements.txt           # Python dependencies (uv format)
-└── pyproject.toml             # Project configuration for uv
+│   ├── data_loader.py      # PDF extraction and text processing
+│   ├── vector_store.py     # Vector database setup and management
+│   └── rag_pipeline.py     # Main RAG system implementation
+├── demo.py                 # Demo script
+├── README.md               # This file
+├── requirements.txt        # Python dependencies (for reference)
+└── pyproject.toml          # Project configuration for uv
 ```
 
-## Dependencies
+## Technology Stack
 
-- LangChain: For RAG orchestration
-- Hugging Face Transformers: For LLM integration
-- Sentence Transformers: For embeddings
-- PyMuPDF: For PDF text extraction
-- ChromaDB: For vector storage
+- **LangChain**: For RAG orchestration and LLM integration
+- **Sentence Transformers**: For generating document embeddings  
+- **ChromaDB**: For vector storage and similarity search
+- **Ollama**: For running local LLMs like Mistral, Llama2, or Phi
+- **PyMuPDF**: For PDF text extraction
 
 ## License
 

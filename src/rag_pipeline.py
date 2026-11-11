@@ -1,9 +1,9 @@
 """
-Main RAG pipeline for constitution queries and generation.
+Main RAG pipeline for constitution queries and generation with Ollama integration.
 """
 
-from langchain_community.chains import RetrievalQA
-from langchain_community.llms import HuggingFaceHub
+from langchain_classic.chains import RetrievalQA
+from langchain_community.llms import Ollama
 from langchain_classic.prompts import PromptTemplate
 from src.data_loader import load_constitution_files, process_constitution_files
 from src.vector_store import ConstitutionVectorStore
@@ -11,17 +11,19 @@ import os
 
 class ConstitutionRAG:
     """
-    Main RAG system for constitution documents.
+    Main RAG system for constitution documents with Ollama integration.
     """
     
-    def __init__(self, vector_store_path: str = "vector_store"):
+    def __init__(self, vector_store_path: str = "vector_store", model_name: str = "mistral"):
         """
         Initialize the RAG system.
         
         Args:
             vector_store_path (str): Path to vector store directory
+            model_name (str): Name of the Ollama model to use
         """
         self.vector_store_path = vector_store_path
+        self.model_name = model_name
         self.vectorstore = ConstitutionVectorStore(persist_directory=vector_store_path)
         self.qa_chain = None
         
@@ -65,7 +67,7 @@ class ConstitutionRAG:
         if self.vectorstore.vectorstore is None:
             raise ValueError("Vector store not initialized. Call setup_pipeline() first.")
             
-        # Create retrieval QA chain
+        # Create retrieval QA chain using Ollama
         prompt_template = """Use the following pieces of context to answer the question at the end. 
         If you don't know the answer, just say that you don't know, don't try to make up an answer.
         
@@ -78,26 +80,20 @@ class ConstitutionRAG:
             template=prompt_template, input_variables=["context", "question"]
         )
         
-        # For now, let's create a simple retrieval without LLM for testing purposes
-        try:
-            # Initialize the QA chain with fallback to simpler approach if needed
-            self.qa_chain = RetrievalQA.from_chain_type(
-                llm=HuggingFaceHub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature":0.1, "max_length":512}),
-                chain_type="stuff",
-                retriever=self.vectorstore.vectorstore.as_retriever(),
-                return_source_documents=True,
-                chain_type_kwargs={"prompt": PROMPT}
-            )
-            
-            # Run the query
-            result = self.qa_chain({"query": question})
-            return result["result"]
-        except Exception as e:
-            print(f"LLM integration failed: {e}")
-            print("Falling back to simple retrieval...")
-            # Simple approach without LLM - just return retrieved documents
-            results = self.vectorstore.search(question, k=3)
-            return "\n\n".join([f"Document: {r['metadata']['filename']}\nContent: {r['content']}" for r in results])
+        # Initialize the QA chain with Ollama
+        llm = Ollama(model=self.model_name, temperature=0.1)
+        
+        self.qa_chain = RetrievalQA.from_chain_type(
+            llm=llm,
+            chain_type="stuff",
+            retriever=self.vectorstore.vectorstore.as_retriever(),
+            return_source_documents=True,
+            chain_type_kwargs={"prompt": PROMPT}
+        )
+        
+        # Run the query
+        result = self.qa_chain({"query": question})
+        return result["result"]
         
     def generate_constitution(self, prompt: str) -> str:
         """
@@ -124,8 +120,7 @@ class ConstitutionRAG:
         Use language and concepts appropriate for a modern constitution.
         """
         
-        # For now, we'll use the query method as a basic implementation
-        # In a more advanced system, this would be a separate generation pipeline
+        # Use the query method to get relevant context and then generate
         return self.query(generation_prompt)
 
 if __name__ == "__main__":

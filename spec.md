@@ -8,7 +8,7 @@ This project aims to build a Retrieval-Augmented Generation (RAG) system using c
 1. Query the RAG about any information in the constitutions
 2. Create new constitution-style documents with reference to a set of constitutions as guidance
 
-## Recommended Tools for RAG System
+## Tools used by this RAG System
 
 ### 1. Data Processing & Preprocessing
 - **PDF Extraction**: PyMuPDF (fitz) or pdfplumber for extracting text from PDF constitution files
@@ -21,18 +21,13 @@ This project aims to build a Retrieval-Augmented Generation (RAG) system using c
 - **Retrieval**: Similarity search using cosine similarity or other distance metrics
 
 ### 3. LLM Integration
-- **Large Language Models**: OpenAI GPT models, Hugging Face models (LLaMA, Mistral), or local models like Llama.cpp
+- **Local LLMs with Ollama**: Run models like Mistral, Llama2, or Phi locally via Ollama
 - **Prompt Engineering**: LangChain's prompt templates or custom prompt engineering frameworks
 - **Generation Pipeline**: LangChain's LLM chains for orchestrating retrieval and generation
 
-### 4. Framework & Libraries
-- **LangChain**: Comprehensive framework for building LLM applications with built-in support for data loading, vector stores, and LLM integration
-- **LlamaIndex (formerly GPT Index)**: Alternative framework focused on data indexing and retrieval
-- **Transformers (Hugging Face)**: For running local models and custom fine-tuning
-
 ### 5. Environment Management
 - **uv**: Modern Python dependency management tool for creating isolated environments
-- **Poetry**: Alternative dependency and environment management tool
+- **Ollama**: Local LLM serving platform for running models without internet connection
 
 ## Implementation Approach
 
@@ -49,7 +44,7 @@ This project aims to build a Retrieval-Augmented Generation (RAG) system using c
 3. **Query Interface**
    - Implement similarity search
    - Create prompt templates for question answering
-   - Build generation pipeline
+   - Build generation pipeline using Ollama LLMs
 
 4. **Generation Capability**
    - Enable creating new constitution-style documents
@@ -70,22 +65,31 @@ For this project, I recommend the following stack:
 ### Environment Management:
 - uv: Modern Python dependency management tool
 
+### Local LLM Platform:
+- Ollama: For running local models like Mistral, Llama2, or Phi without internet connection
+
 ### Setup Steps:
 1. Install uv: https://docs.astral.sh/uv/
-2. Create virtual environment with uv:
+2. Install Ollama: https://ollama.com/download
+3. Pull required models with Ollama:
+   ```bash
+   ollama pull mistral
+   ollama pull llama2
+   ```
+4. Create virtual environment with uv:
    ```bash
    uv venv
    source .venv/bin/activate
    ```
-3. Install dependencies:
+5. Install dependencies:
    ```bash
-   uv pip install -e .
+   uv sync
    ```
-4. Create data processing pipeline
-5. Set up vector database
-6. Configure LLM integration
-7. Build query interface
-8. Implement generation functionality
+6. Create data processing pipeline
+7. Set up vector database
+8. Configure Ollama LLM integration
+9. Build query interface
+10. Implement generation functionality
 
 ## File Structure
 ```
@@ -100,7 +104,6 @@ constitution-rag/
 │   └── rag_pipeline.py     # Main RAG system implementation
 ├── demo.py                 # Demo script for testing the system
 ├── README.md               # Project documentation
-├── requirements.txt        # Python dependencies (uv format)
 └── pyproject.toml          # Project configuration for uv
 ```
 
@@ -110,5 +113,6 @@ constitution-rag/
 3. Install required dependencies
 4. Implement data loading and preprocessing
 5. Build vector database
-6. Create query interface
-7. Implement generation capability
+6. Configure Ollama LLM integration
+7. Create query interface
+8. Implement generation capability

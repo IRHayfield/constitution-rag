@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Quick demonstration script for the Constitution RAG system.
+Quick demonstration script for the Constitution RAG system with Ollama.
 """
 
 import os
@@ -17,11 +17,12 @@ def main():
     parser.add_argument('--query', type=str, help='Query to ask about constitutions')
     parser.add_argument('--generate', type=str, help='Prompt for generating a new constitution')
     parser.add_argument('--setup-only', action='store_true', help='Only set up the system without querying')
+    parser.add_argument('--model', type=str, default='mistral', help='Ollama model to use')
     
     args = parser.parse_args()
     
     # Initialize RAG system
-    rag = ConstitutionRAG()
+    rag = ConstitutionRAG(model_name=args.model)
     
     print("Setting up Constitution RAG system...")
     rag.setup_pipeline(use_existing=False)

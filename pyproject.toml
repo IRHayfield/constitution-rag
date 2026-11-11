@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "constitution-rag"
 version = "0.1.0"
-description = "RAG system for constitutional documents"
+description = "RAG system for constitutional documents with Ollama integration"
 authors = [
     {name = "User", email = "user@example.com"}
 ]
@@ -24,7 +24,8 @@ dependencies = [
     "transformers>=4.30.0",
     "sentence-transformers>=2.2.0",
     "pymupdf>=1.19.0",
-    "chromadb>=0.4.0"
+    "chromadb>=0.4.0",
+    "ollama>=0.1.0"
 ]
 
 [project.optional-dependencies]

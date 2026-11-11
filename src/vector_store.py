@@ -2,9 +2,9 @@
 Vector store module for managing embeddings and retrieval.
 """
 
-from langchain.vectorstores import Chroma
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import Chroma
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_classic.text_splitter import RecursiveCharacterTextSplitter
 from typing import List, Dict
 import os
 
