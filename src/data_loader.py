@@ -3,7 +3,7 @@ Data loader module for extracting and processing constitution documents.
 """
 
 import os
-import fitz  # PyMuPDF
+import pymupdf
 from typing import List, Dict
 import re
 
@@ -17,7 +17,7 @@ def extract_text_from_pdf(pdf_path: str) -> str:
     Returns:
         str: Extracted text from the PDF
     """
-    doc = fitz.open(pdf_path)
+    doc = pymupdf.open(pdf_path)
     text = ""
     for page in doc:
         text += page.get_text()
