@@ -1,0 +1,107 @@
+Metadata-Version: 2.4
+Name: constitution-rag
+Version: 0.1.0
+Summary: RAG system for constitutional documents
+Author-email: User <user@example.com>
+License: MIT
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.14.9
+Description-Content-Type: text/markdown
+Requires-Dist: langchain>=0.1.0
+Requires-Dist: langchain-community>=0.1.0
+Requires-Dist: torch>=2.0.0
+Requires-Dist: transformers>=4.30.0
+Requires-Dist: sentence-transformers>=2.2.0
+Requires-Dist: pymupdf>=1.19.0
+Requires-Dist: chromadb>=0.4.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"
+Requires-Dist: flake8>=6.0.0; extra == "dev"
+
+# Constitution RAG System
+
+A Retrieval-Augmented Generation (RAG) system for analyzing and generating constitutional documents.
+
+## Overview
+
+This project implements a RAG system that can:
+1. Query information from constitutional documents
+2. Generate new constitution-style documents based on guidance
+
+## Features
+
+- PDF processing of constitutional documents
+- Vector storage and similarity search
+- LLM integration for question answering and generation
+- Modular architecture for extensibility
+
+## Installation
+
+### Using uv (Recommended)
+
+1. Install uv: https://docs.astral.sh/uv/
+2. Run the setup script:
+   ```bash
+   ./setup.sh
+   ```
+
+### Manual Installation
+
+1. Create virtual environment:
+   ```bash
+   uv venv
+   source .venv/bin/activate
+   ```
+2. Install dependencies:
+   ```bash
+   uv pip install -e .
+   ```
+
+## Usage
+
+### Setup
+```bash
+python demo.py --setup-only
+```
+
+### Query
+```bash
+python demo.py --query "What are the fundamental rights mentioned in the constitutions?"
+```
+
+### Generate
+```bash
+python demo.py --generate "Create a new constitution using principles from constitutions written before 1900"
+```
+
+## Project Structure
+
+```
+constitution-rag/
+├── constitution-rag/          # Main package
+│   ├── __init__.py
+│   ├── data_loader.py         # PDF extraction and text processing
+│   ├── vector_store.py        # Vector database setup and management
+│   └── rag_pipeline.py        # Main RAG system implementation
+├── constitutions/             # Input PDF constitution files
+├── output/                    # Processed documents and results
+├── demo.py                    # Demo script
+├── setup.sh                   # Setup script for environment
+├── requirements.txt           # Python dependencies (uv format)
+└── pyproject.toml             # Project configuration for uv
+```
+
+## Dependencies
+
+- LangChain: For RAG orchestration
+- Hugging Face Transformers: For LLM integration
+- Sentence Transformers: For embeddings
+- PyMuPDF: For PDF text extraction
+- ChromaDB: For vector storage
+
+## License
+
+MIT
