@@ -25,7 +25,7 @@ def main():
     rag = ConstitutionRAG(model_name=args.model)
     
     print("Setting up Constitution RAG system...")
-    rag.setup_pipeline(use_existing=False)
+    rag.setup_pipeline(use_existing=True)
     
     if args.setup_only:
         print("System setup complete. No queries executed.")

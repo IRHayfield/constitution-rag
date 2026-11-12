@@ -5,7 +5,7 @@ Main RAG pipeline for constitution queries and generation with Ollama integratio
 from langchain_classic.chains import RetrievalQA
 from langchain_ollama import OllamaLLM
 from langchain_classic.prompts import PromptTemplate
-from src.data_loader import load_constitution_files, process_constitution_files
+from src.data_loader import load_constitution_files, process_pdf_constitution_files
 from src.vector_store import ConstitutionVectorStore
 import os
 
@@ -43,7 +43,7 @@ class ConstitutionRAG:
             constitutions_dir = "constitutions"
             output_dir = "output/processed_constitutions"
             
-            process_constitution_files(constitutions_dir, output_dir)
+            process_pdf_constitution_files(constitutions_dir, output_dir)
             
             # Load processed documents
             documents = load_constitution_files(output_dir)

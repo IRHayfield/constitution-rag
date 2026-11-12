@@ -7,23 +7,6 @@ import pymupdf
 from typing import List, Dict
 import re
 
-def extract_text_from_pdf(pdf_path: str) -> str:
-    """
-    Extract text from a PDF file using PyMuPDF.
-    
-    Args:
-        pdf_path (str): Path to the PDF file
-        
-    Returns:
-        str: Extracted text from the PDF
-    """
-    doc = pymupdf.open(pdf_path)
-    text = ""
-    for page in doc:
-        text += page.get_text()
-    doc.close()
-    return text
-
 def clean_text(text: str) -> str:
     """
     Clean and normalize extracted text.
@@ -58,12 +41,9 @@ def load_constitution_files(constitution_dir: str) -> List[Dict]:
         file_path = os.path.join(constitution_dir, filename)
         
         raw_text = ""
-        if filename.endswith('.pdf'):
-            # Extract text from PDF
-            raw_text = extract_text_from_pdf(file_path)
-        else:
-            with open(file_path, "r") as file:
-                raw_text = file.read()
+
+        with open(file_path, "r") as file:
+            raw_text = file.read()
         
         # Clean the text
         cleaned_text = clean_text(raw_text)
@@ -76,7 +56,7 @@ def load_constitution_files(constitution_dir: str) -> List[Dict]:
     
     return constitutions
 
-def process_constitution_files(constitution_dir: str, output_dir: str) -> None:
+def process_pdf_constitution_files(constitution_dir: str, output_dir: str) -> None:
     """
     Process all constitution files and save them in a structured format.
     
@@ -87,18 +67,19 @@ def process_constitution_files(constitution_dir: str, output_dir: str) -> None:
     # Create output directory if it doesn't exist
     os.makedirs(output_dir, exist_ok=True)
     
-    constitutions = load_constitution_files(constitution_dir)
-    
-    for constitution in constitutions:
-        filename = constitution['filename']
-        content = constitution['content']
+    for filename in os.listdir(constitution_dir):
+        pdf_path = os.path.join(constitution_dir, filename)
+        stem, _ = os.path.splitext(filename)
+        txt_filename = stem + ".txt"
+        txt_path = os.path.join(output_dir, txt_filename)
         
-        # Save cleaned text to output directory
-        output_path = os.path.join(output_dir, f"{os.path.splitext(filename)[0]}.txt")
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(content)
+        with pymupdf.open(pdf_path) as doc:
+            text = "\n".join(page.get_text("text") for page in doc)
+        
+        with open(txt_path, "w", encoding="utf-8") as f:
+            f.write(text)
             
-        print(f"Processed {filename} and saved to {output_path}")
+        print(f"Processed {filename} and saved to {txt_path}")
 
 if __name__ == "__main__":
     # Example usage
