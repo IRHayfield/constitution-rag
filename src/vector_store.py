@@ -2,7 +2,7 @@
 Vector store module for managing embeddings and retrieval.
 """
 
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_classic.text_splitter import RecursiveCharacterTextSplitter
 from typing import List, Dict
@@ -113,7 +113,7 @@ class ConstitutionVectorStore:
         Save the vector store to disk.
         """
         if self.vectorstore is not None:
-            self.vectorstore.persist()
+            # self.vectorstore.persist()
             print("Vector store saved successfully")
         else:
             print("No vector store to save")

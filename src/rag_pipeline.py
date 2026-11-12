@@ -3,7 +3,7 @@ Main RAG pipeline for constitution queries and generation with Ollama integratio
 """
 
 from langchain_classic.chains import RetrievalQA
-from langchain_community.llms import Ollama
+from langchain_ollama import OllamaLLM
 from langchain_classic.prompts import PromptTemplate
 from src.data_loader import load_constitution_files, process_constitution_files
 from src.vector_store import ConstitutionVectorStore
@@ -81,7 +81,7 @@ class ConstitutionRAG:
         )
         
         # Initialize the QA chain with Ollama
-        llm = Ollama(model=self.model_name, temperature=0.1)
+        llm = OllamaLLM(model=self.model_name, temperature=0.1)
         
         self.qa_chain = RetrievalQA.from_chain_type(
             llm=llm,
@@ -92,7 +92,7 @@ class ConstitutionRAG:
         )
         
         # Run the query
-        result = self.qa_chain({"query": question})
+        result = self.qa_chain.invoke({"query": question})
         return result["result"]
         
     def generate_constitution(self, prompt: str) -> str:
