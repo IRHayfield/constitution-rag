@@ -55,20 +55,24 @@ def load_constitution_files(constitution_dir: str) -> List[Dict]:
     constitutions = []
     
     for filename in os.listdir(constitution_dir):
+        file_path = os.path.join(constitution_dir, filename)
+        
+        raw_text = ""
         if filename.endswith('.pdf'):
-            file_path = os.path.join(constitution_dir, filename)
-            
             # Extract text from PDF
             raw_text = extract_text_from_pdf(file_path)
-            
-            # Clean the text
-            cleaned_text = clean_text(raw_text)
-            
-            constitutions.append({
-                'filename': filename,
-                'content': cleaned_text,
-                'source_path': file_path
-            })
+        else:
+            with open(file_path, "r") as file:
+                raw_text = file.read()
+        
+        # Clean the text
+        cleaned_text = clean_text(raw_text)
+        
+        constitutions.append({
+            'filename': filename,
+            'content': cleaned_text,
+            'source_path': file_path
+        })
     
     return constitutions
 
