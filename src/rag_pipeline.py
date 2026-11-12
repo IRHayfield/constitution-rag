@@ -93,6 +93,17 @@ class ConstitutionRAG:
         
         # Run the query
         result = self.qa_chain.invoke({"query": question})
+        
+        # Display source documents (files being used for context)
+        if "source_documents" in result and result["source_documents"]:
+            print("\n===============")
+            print("\nFiles being used as context:")
+            for doc in result["source_documents"]:
+                print(f"- {doc.metadata.get('source', 'Unknown source')}")
+            print("\n===============\n")
+        else:
+            print("No source documents found for this query.")
+            
         return result["result"]
         
     def generate_constitution(self, prompt: str) -> str:
