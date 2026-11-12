@@ -113,7 +113,6 @@ class ConstitutionVectorStore:
         Save the vector store to disk.
         """
         if self.vectorstore is not None:
-            # self.vectorstore.persist()
             print("Vector store saved successfully")
         else:
             print("No vector store to save")
