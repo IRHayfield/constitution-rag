@@ -3,7 +3,7 @@ Vector store module for managing embeddings and retrieval.
 """
 
 from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_classic.text_splitter import RecursiveCharacterTextSplitter
 from typing import List, Dict
 import os
@@ -34,14 +34,18 @@ class ConstitutionVectorStore:
         # Prepare documents for vectorization
         texts = []
         metadatas = []
-        
         for doc in documents:
-            texts.append(doc['content'])
-            metadatas.append({
-                'filename': doc['filename'],
-                'source': doc.get('source_path', ''),
-                'type': 'constitution'
-            })
+            content = doc['content'].strip()
+            if content:  # Only process non-empty content
+                texts.append(content)
+                metadatas.append({
+                    'filename': doc['filename'],
+                    'source': doc.get('source_path', ''),
+                    'type': 'constitution'
+                })
+        
+        if not texts:
+            raise ValueError("No valid text content found in documents")
         
         # Split texts into chunks
         text_splitter = RecursiveCharacterTextSplitter(
@@ -53,10 +57,14 @@ class ConstitutionVectorStore:
         split_texts = text_splitter.split_text("\n\n".join(texts))
         split_metadatas = []
         
+        # Distribute metadata to chunks
         for i, text in enumerate(split_texts):
-            # Distribute metadata to chunks
-            doc_index = min(i // 5, len(metadatas) - 1)  # Assuming 5 chunks per doc
-            split_metadatas.append(metadatas[doc_index])
+            if text.strip():  # Only process non-empty chunks
+                doc_index = min(i // 5, len(metadatas) - 1)  # Assuming 5 chunks per doc
+                split_metadatas.append(metadatas[doc_index])
+        
+        if not split_texts:
+            raise ValueError("No valid text chunks found after splitting")
         
         # Create vector store
         self.vectorstore = Chroma.from_texts(
