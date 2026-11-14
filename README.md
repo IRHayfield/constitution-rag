@@ -10,7 +10,8 @@ This project implements a RAG system that can:
 
 ## Features
 
-- PDF processing of constitutional documents
+- Downloading of constitutions from the web
+- PDF processing of pdf constitutional documents
 - Vector storage and similarity search
 - Local LLM integration using Ollama
 - Modular architecture for extensibility
@@ -60,7 +61,7 @@ python demo.py --generate "Create a new constitution using principles from const
 ```
 constitution-rag/
 ├── spec.md                 # Specification document
-├── constitutions/          # Input PDF constitution files
+├── constitutions/          # Input TXT constitution files
 ├── output/                 # Processed documents and results
 ├── src/
 │   ├── __init__.py
@@ -80,6 +81,7 @@ constitution-rag/
 - **ChromaDB**: For vector storage and similarity search
 - **Ollama**: For running local LLMs like Mistral, Llama2, or Phi
 - **PyMuPDF**: For PDF text extraction
+- **BeautifulSoup**: For html text extraction
 
 ## License
 

@@ -11,13 +11,13 @@ This project aims to build a Retrieval-Augmented Generation (RAG) system using c
 ## Tools used by this RAG System
 
 ### 1. Data Processing & Preprocessing
-- **PDF Extraction**: PyMuPDF (fitz) or pdfplumber for extracting text from PDF constitution files
+- **HTML Text Extraction**: BeautifulSoup for extracting text from html constitution web pages
 - **Text Cleaning**: NLTK, spaCy, or regular expressions for cleaning and normalizing text
 - **Chunking**: LangChain's RecursiveCharacterTextSplitter or similar tools for dividing documents into manageable chunks
 
 ### 2. Vector Database & Embeddings
 - **Embedding Models**: Sentence Transformers (all-MiniLM-L6-v2 or similar) or OpenAI embeddings
-- **Vector Store**: ChromaDB, Pinecone, or FAISS for storing and retrieving vector embeddings
+- **Vector Store**: ChromaDB for storing and retrieving vector embeddings
 - **Retrieval**: Similarity search using cosine similarity or other distance metrics
 
 ### 3. LLM Integration
@@ -32,7 +32,7 @@ This project aims to build a Retrieval-Augmented Generation (RAG) system using c
 ## Implementation Approach
 
 1. **Document Ingestion**
-   - Extract text from PDF constitution files
+   - Download constitutions from the web
    - Clean and preprocess text data
    - Split into chunks for embedding
 
@@ -53,10 +53,8 @@ This project aims to build a Retrieval-Augmented Generation (RAG) system using c
 
 ## Technology Stack Recommendation
 
-For this project, I recommend the following stack:
-
 ### Core Libraries:
-- Python 3.8+
+- Python 3.14+
 - LangChain (for RAG orchestration)
 - Hugging Face Transformers (for LLMs)
 - Sentence Transformers (for embeddings)
@@ -95,8 +93,7 @@ For this project, I recommend the following stack:
 ```
 constitution-rag/
 ├── spec.md                 # This specification file
-├── constitutions/          # Input PDF constitution files
-├── output/                 # Output directory for processed data and results
+├── constitutions/          # Input txt constitution files
 ├── src/
 │   ├── __init__.py
 │   ├── data_loader.py      # PDF extraction and text processing
