@@ -54,14 +54,21 @@ class ConstitutionVectorStore:
             separators=["\n\n", "\n", " ", ""]
         )
         
-        split_texts = text_splitter.split_text("\n\n".join(texts))
-        split_metadatas = []
+        individual_chunks = []
+        individual_chunk_metadatas = []
         
-        # Distribute metadata to chunks
-        for i, text in enumerate(split_texts):
-            if text.strip():  # Only process non-empty chunks
-                doc_index = min(i // 5, len(metadatas) - 1)  # Assuming 5 chunks per doc
-                split_metadatas.append(metadatas[doc_index])
+        for doc_content, doc_metadata in zip(texts, metadatas):
+            # Split document's content
+            doc_split_texts = text_splitter.split_text(doc_content)
+            
+            # Add each chunk with its metadata
+            for chunk in doc_split_texts:
+                if chunk.strip():  # Only add non-empty chunks
+                    individual_chunks.append(chunk)
+                    individual_chunk_metadatas.append(doc_metadata)
+        
+        split_texts = individual_chunks
+        split_metadatas = individual_chunk_metadatas
         
         if not split_texts:
             raise ValueError("No valid text chunks found after splitting")
