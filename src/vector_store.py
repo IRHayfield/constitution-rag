@@ -4,7 +4,7 @@ Vector store module for managing embeddings and retrieval.
 
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_classic.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from typing import List, Dict
 import os
 
@@ -48,10 +48,21 @@ class ConstitutionVectorStore:
             raise ValueError("No valid text content found in documents")
         
         # Split texts into chunks
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=200,
-            separators=["\n\n", "\n", " ", ""]
+        text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+            encoding_name="cl100k_base",
+            chunk_size=500,          # ~500 tokens (~2,000 characters)
+            chunk_overlap=50,        # 10% overlap to preserve boundary context
+            is_separator_regex=True,
+            separators=[
+                r"\n(?=ARTICLE\s+[IVXLCDM\d]+)",  # Split before Articles (e.g., ARTICLE I)
+                r"\n(?=Section\s+\d+\.)",          # Split before Sections (e.g., Section 1.)
+                r"\n(?=\(\d+\)|[a-z]\))",          # Split before sub-clauses like (1) or a)
+                r"\n\n",
+                r"\n",
+                r"(?<=\.)\s+",                     # Split at sentence endings
+                r" ",
+                r""
+            ]
         )
         
         individual_chunks = []
